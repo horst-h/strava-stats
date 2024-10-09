@@ -88,6 +88,14 @@ function displayData(data) {
     // create a heading element
     const heading = document.createElement('h2');
     heading.innerText = 'Athlete Stats';
+    // display date and time below
+    const date = new Date();
+    const dateString = date.toDateString();
+    const timeString = date.toLocaleTimeString();
+    const dateTime = document.createElement('p');
+    dateTime.innerText = `Data retrieved on ${dateString} at ${timeString}`;
+    // append date and time to the div
+    div.appendChild(dateTime);
 
     // append heading to the div
     div.appendChild(heading);
