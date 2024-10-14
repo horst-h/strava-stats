@@ -4,3 +4,17 @@
 header {
     padding: 20px;
 }
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.4;
+}
+
+.data_value {
+    font-weight: bold;
+}
+
+.small_text {
+    font-size: 0.8em;
+    font-style: italic;
+}

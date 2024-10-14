@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OAuth 2.0 Client Application</title>
+    <title>Athlete goal setting and statistics</title>
     <link rel="stylesheet" href="css/styles.css">
+</head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athlete goal setting and statistics</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
     <header>      
-        <img src="images/strava-seeklogo.svg" width="40" alt="App Logo">
-        <span><b>Strava Statistics</b></span>
+        <img src="images/logo.png" width="40" alt="App Logo">
+        <span><b>Athlete Goals & Statistics</b></span>
     </header>
     <main>
         <div id="config-form-container" style="display: none;">
@@ -32,19 +39,20 @@
 
         <!-- Div to display the running stats -->
           <div id="athleteStats">
-            <strong>YTD Running Distance:</strong> <span id="run_ytd_run_totals">...</span><br>
-            <strong>YTD Number of runs:</strong> <span id="run_ytd_run_count">...</span><br>
-            <strong>Weeks left:</strong> <span id="weeks_left">...</span><br>
-            <strong>Avg dist per week:</strong> <span id="avg_dist_per_week">...</span><br>
-            <strong>Avg number of runs per week:</strong> <span id="avg_runs_per_week">...</span><br>
-            <strong>Avg distance per run:</strong> <span id="avg_dist_per_run">...</span><br>
-            <strong>Target reachable:</strong> <span id="target_reachable">...</span><br>
-            Forecast of <strong><span id="forecast_distance">...</strong></span> with <strong><span id="floor_avg_runs_per_week"></span>runs per week</strong> 
-            with a minimum distance of <strong><span id="floor_avg_dist_per_run"></span></strong> per week.</strong><br>
-            Resulting in a total of <strong><span id="runs_till_eoy"></span> runs </strong>this year<br>
+            YTD Running Distance: <span class="data_value" id="run_ytd_run_totals">...</span><br>
+            YTD Number of runs: <span class="data_value" id="run_ytd_run_count">...</span><br>
+            Weeks left: <span class="data_value" id="weeks_left">...</span><br>
+            Avg dist per week: <span class="data_value" id="avg_dist_per_week">...</span><br>
+            Avg number of runs per week: <span class="data_value" id="avg_runs_per_week">...</span><br>
+            Avg distance per run: <span class="data_value" id="avg_dist_per_run">...</span><br>
+            Target reachable: <span class="data_value" id="target_reachable">...</span>, <span class="data_value" id="target_differnce"> </span> to goal<br>
+            Target approximately reached in <span class="data_value" id="weeksToTarget"></span> weeks on <span class="data_value" id="targetDate">...</span><br>
+            Forecast of <span class="data_value" id="forecast_distance">...</span> with <span class="data_value" id="floor_avg_runs_per_week"></span>runs per week 
+            with a minimum distance of <span class="data_value" id="floor_avg_dist_per_run"></span> per week.<br>
+            Resulting in a total of <span class="data_value" id="runs_till_eoy"></span> runs this year<br>
         </div>
     <footer>
-        <p>Powered by GitHub Pages</p>
+        <p class="small_text"><span>Powered by Strava <img src="images/strava-seeklogo.svg" width="12" alt="App Logo"> & GitHub Pages</span></p>
     </footer>
     <!-- JavaScript files -->
     <script src="js/utils/storage.js"></script>
