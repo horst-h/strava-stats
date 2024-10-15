@@ -5,13 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Athlete goal setting and statistics</title>
     <link rel="stylesheet" href="css/styles.css">
-</head>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Athlete goal setting and statistics</title>
-    <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script>
+        function updateFavicon() {
+          const favicon = document.getElementById("favicon");
+          const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      
+          if (darkModeMediaQuery.matches) {
+            favicon.href = "images/favicon-dark.png";  // Set dark mode favicon
+          } else {
+            favicon.href = "favicon.ico";  // Set light mode favicon
+          }
+        }
+      
+        // Initial check
+        updateFavicon();
+      
+        // Listen for changes in the color scheme
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', updateFavicon);
+      </script>
 </head>
 <body>
     <header>      
