@@ -116,3 +116,4 @@ window.onload = createChart;
 
 // redraw onve the resolution changed
 window.onresize = createChart;
+window.addEventListener("orientationchange", createChart);
