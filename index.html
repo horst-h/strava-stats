@@ -6,24 +6,8 @@
     <title>Athlete goal setting and statistics</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <script>
-        function updateFavicon() {
-          const favicon = document.getElementById("favicon");
-          const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      
-          if (darkModeMediaQuery.matches) {
-            favicon.href = "images/favicon-dark.png";  // Set dark mode favicon
-          } else {
-            favicon.href = "favicon.ico";  // Set light mode favicon
-          }
-        }
-      
-        // Initial check
-        updateFavicon();
-      
-        // Listen for changes in the color scheme
-        window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', updateFavicon);
-      </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
     <header>      
@@ -47,22 +31,25 @@
         <button id="get-protected-data" style="display: none;">Get Protected Data</button>
         <p id="api-response">API Response will be displayed here.</p>
         <p id="token-info">No Token Info Yet</p>
-    </main>
-
+        
         <!-- Div to display the running stats -->
-          <div id="athleteStats">
-            YTD Running Distance: <span class="data_value" id="run_ytd_run_totals">...</span><br>
-            YTD Number of runs: <span class="data_value" id="run_ytd_run_count">...</span><br>
-            Weeks left: <span class="data_value" id="weeks_left">...</span><br>
-            Avg dist per week: <span class="data_value" id="avg_dist_per_week">...</span><br>
-            Avg number of runs per week: <span class="data_value" id="avg_runs_per_week">...</span><br>
-            Avg distance per run: <span class="data_value" id="avg_dist_per_run">...</span><br>
-            Target reachable: <span class="data_value" id="target_reachable">...</span>, <span class="data_value" id="target_differnce"> </span> to victory<br>
-            Target approximately reached in <span class="data_value" id="weeksToTarget"></span> weeks on <span class="data_value" id="targetDate">...</span><br>
-            Forecast of <span class="data_value" id="forecast_distance">...</span> with <span class="data_value" id="floor_avg_runs_per_week"></span>runs per week 
-            with a minimum distance of <span class="data_value" id="floor_avg_dist_per_run"></span> per week.<br>
-            Resulting in a total of <span class="data_value" id="runs_till_eoy"></span> runs this year<br>
+        <div id="athleteStats">
+          YTD Running Distance: <span class="data_value" id="run_ytd_run_totals">...</span><br>
+          YTD Number of runs: <span class="data_value" id="run_ytd_run_count">...</span><br>
+          Weeks left: <span class="data_value" id="weeks_left">...</span><br>
+          Avg dist per week: <span class="data_value" id="avg_dist_per_week">...</span><br>
+          Avg number of runs per week: <span class="data_value" id="avg_runs_per_week">...</span><br>
+          Avg distance per run: <span class="data_value" id="avg_dist_per_run">...</span><br>
+          Target reachable: <span class="data_value" id="target_reachable">...</span>, <span class="data_value" id="target_differnce"> </span> to victory<br>
+          Target approximately reached in <span class="data_value" id="weeksToTarget"></span> weeks on <span class="data_value" id="targetDate">...</span><br>
+          Forecast of <span class="data_value" id="forecast_distance">...</span> with <span class="data_value" id="floor_avg_runs_per_week"></span>runs per week 
+          with a minimum distance of <span class="data_value" id="floor_avg_dist_per_run"></span> per week.<br>
+          Resulting in a total of <span class="data_value" id="runs_till_eoy"></span> runs this year<br>
         </div>
+        <div id="lineChart">
+          <canvas id="myChart"></canvas>
+        </div>
+      </main>
     <footer>
         <p class="small_text"><span>Powered by Strava <img src="images/strava-seeklogo.svg" width="12" alt="App Logo"> & GitHub Pages</span></p>
     </footer>
@@ -70,6 +57,7 @@
     <script src="js/utils/storage.js"></script>
     <script src="js/oauth/config.js"></script>
     <script src="js/oauth/oauth.js"></script>
-    <script src="js/app/app.js"></script>
+    <script type="module" src="js/app/app.js"></script>
+    <script src="js/app/chartConfig.js"></script>
 </body>
 </html>

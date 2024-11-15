@@ -1,3 +1,8 @@
+// impoort activity classes fromo file ActivitySummary.js
+import ActivitySummary from './ActivitySummary.js';
+import DateUtils from './DateUtils.js';
+
+
 document.addEventListener('DOMContentLoaded', () => {
   // Check if configuration and tokens are stored
   const clientId = loadClientId();
@@ -69,7 +74,8 @@ async function fetchProtectedData(accessToken) {
       console.log('Received Data:', data);
 
       // process and display the data
-      processData(data).then((object) => {displayData(object)});
+      // processData(data).then((object) => {displayData(object)});
+      createActivitySummary(data).then((object) => {displayData(object)});
     } catch (error) {
       console.error('Error fetching protected data:', error);
       document.getElementById('api-response').innerText =
@@ -81,67 +87,14 @@ async function fetchProtectedData(accessToken) {
   }
 }
 
-async function processData(data) {
-    const today = new Date();
-    const endOfYear = new Date(today.getFullYear(), 11, 31);
-    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    const diffDays = Math.round(Math.abs((endOfYear - today) / oneDay));
-    const weeksToGo = Math.ceil(diffDays / 7);
-
-    const startOfYear = new Date(today.getFullYear(), 0, 1);
-    const diffDaysStart = Math.round(Math.abs((today - startOfYear) / oneDay));
-    const weeksPassed = Math.ceil(diffDaysStart / 7);
-
-    const distance = data.ytd_run_totals.distance;
-    const numRuns = data.ytd_run_totals.count;
-    const distanceInKm = parseFloat((distance / 1000).toFixed(2));
-
-    const avgDistance = parseFloat((distance / weeksPassed / 1000).toFixed(2));
-    const avgRuns = parseFloat((numRuns / weeksPassed).toFixed(2));
-    const avgDistancePerRun = parseFloat((distance / numRuns / 1000).toFixed(2));
-
-    const targetDistance = 1000;
-    const targetReachable =
-    avgDistancePerRun * avgRuns * weeksToGo >= targetDistance - distanceInKm;
-
-    const targetDifference = targetDistance - distanceInKm;
-
-    // forcast on wich date the target distance will be reached
-    const avgDistancePerWeek = distanceInKm / weeksPassed;
-    const avgRunsPerWeek = numRuns / weeksPassed;
-    // const avgDistancePerRun = distance / numRuns;
-    const weeksToTarget = parseFloat(((targetDistance - distanceInKm) / (avgDistancePerRun * avgRunsPerWeek)).toFixed(2));
-
-    // add weeksToTarget to the current date and get the date
-    const targetDate = new Date(today.getTime() + weeksToTarget * 7 * oneDay);
-    
-    const forecastDistance = parseFloat(
-        (distanceInKm + avgDistancePerRun * (weeksToGo - 1) * Math.floor(avgRuns)).toFixed(2)
-    );
-
-    const runsForecast = numRuns + Math.floor(avgRuns) * (weeksToGo - 1);
-
-    const processedData = {
-        distanceInKm: distanceInKm,
-        numRuns: numRuns,
-        weeksToGo: weeksToGo,
-        avgDistance: avgDistance,
-        avgRuns: avgRuns,
-        avgDistancePerRun: avgDistancePerRun,
-        targetReachable: targetReachable,
-        targetDifference: targetDifference,
-        weeksToTarget: weeksToTarget,
-        targetDate: targetDate,
-        forecastDistance: forecastDistance,
-        runsForecast: runsForecast
-    };
-
-    console.log('Processed Data:', processedData);
-
-    // return processed data
-    return processedData;
+async function createActivitySummary(activityData) {
+  const activitySummary = new ActivitySummary(activityData);
+  activitySummary.ytd_run_totals.setGoals({ distance: 1000, count: 100 });
+  console.log(activitySummary);
+  return activitySummary;
 }
 
+// display the data in the HTML-page
 function displayData(data) {
     // clear previous data
     document.getElementById('api-response').innerHTML = '';
@@ -170,30 +123,28 @@ function displayData(data) {
     // Display the distance in the HTML div with id "run_ytd_run_totals"
     document.getElementById(
       'run_ytd_run_totals'
-    ).innerText = `${data.distanceInKm} km`;
-    document.getElementById('run_ytd_run_count').innerText = `${data.numRuns}`;
-    document.getElementById('weeks_left').innerText = `${data.weeksToGo}`;
-    document.getElementById('avg_dist_per_week').innerText = `${data.avgDistance} km`;
-    document.getElementById('avg_runs_per_week').innerText = `${data.avgRuns}`;
+    ).innerText = `${data.ytd_run_totals.distanceInKm} km`;
+    document.getElementById('run_ytd_run_count').innerText = `${data.ytd_run_totals.count}`;
+    document.getElementById('weeks_left').innerText = `${DateUtils.weeksToGo()}`;
+    document.getElementById('avg_dist_per_week').innerText = `${data.ytd_run_totals.avgDistancePerWeekKm} km`;
+    document.getElementById('avg_runs_per_week').innerText = `${data.ytd_run_totals.avgUnitsPerWeek}`;
     document.getElementById(
       'avg_dist_per_run'
-    ).innerText = `${data.avgDistancePerRun} km`;;
-    document.getElementById('target_reachable').innerText = data.targetReachable
+    ).innerText = `${data.ytd_run_totals.avgDistanceUnitKm} km`;;
+    // TODO: crrect this and adapt to specific goal
+    document.getElementById('target_reachable').innerText = data.ytd_run_totals.goalsReachable
       ? 'Yes'
       : 'No';
-    document.getElementById('target_differnce').innerText = `${data.targetDifference.toFixed(2)} km`;
-    document.getElementById('weeksToTarget').innerText = `${data.weeksToTarget}`;
-    document.getElementById('targetDate').innerText = `${data.targetDate.toDateString()}`;
+    // get distance for each target
+    // document.getElementById('target_differnce').innerText = `${data.targetDifference.toFixed(2)} km`;
+    document.getElementById('weeksToTarget').innerText = `${data.ytd_run_totals.predictedWeeksToGoDistance}`;
+    document.getElementById('targetDate').innerText = `${data.ytd_run_totals.predictedDateDistance.toDateString()}`;
     document.getElementById(
       'forecast_distance'
-    ).innerText = `${data.forecastDistance} km`;
-    document.getElementById('floor_avg_runs_per_week').innerText = `${Math.floor(
-      data.avgRuns
-    )} `;
-    document.getElementById('floor_avg_dist_per_run').innerText = `${
-      Math.floor(data.avgRuns) * data.avgDistancePerRun
-    } km`;
-    document.getElementById('runs_till_eoy').innerText = `${data.runsForecast} `;
+    ).innerText = `${data.ytd_run_totals.predictedYearEndDistanceKm} km`;
+    document.getElementById('floor_avg_runs_per_week').innerText = `${data.ytd_run_totals.avgUnitsPerWeek} `;
+    document.getElementById('floor_avg_dist_per_run').innerText = `${data.ytd_run_totals.avgDistanceUnitKm} km`;
+    document.getElementById('runs_till_eoy').innerText = `${data.ytd_run_totals.predictedYearEndCount} `;
   
     // append the div to the api-response element
     document.getElementById('api-response').appendChild(div);
