@@ -53,6 +53,11 @@ export default class ActivityTotals {
     return parseFloat((this.count / DateUtils.daysPassedInYear(this.createdAt)).toFixed(2));
   }
 
+  // get the avarage elevation gain per day
+  get averageDailyElevationGain() {
+    return parseFloat((this.elevation_gain / DateUtils.daysPassedInYear(this.createdAt)).toFixed(2));
+  }
+
   // check if the goals are reached if no goal is set return undefined
   get distanceGoalReached() {
     return this.goals.distance !== undefined ? this.distance/1000 >= this.goals.distance : undefined;
@@ -119,5 +124,52 @@ export default class ActivityTotals {
     const date = this.parent.createdAt;
     date.setDate(date.getDate() + weeksToGo * 7);
     return date;
+  }
+
+  // get the distance difference to the goal
+  getDistanceToGoal(category) {
+    if (!this.goals[category]) {
+      return undefined; // no target set
+    }
+  
+    // if the category is distance convert to km
+    if (category === 'distance') {
+      return parseFloat(this.goals[category] - this.distanceInKm).toFixed(2);
+    }
+
+    const actualValue = this[category]; // get actual achievement data
+    if (actualValue === undefined) {
+      throw new Error(`Category '${category}' is not valid.`);
+    }
+    return this.goals[category] - actualValue;
+  }
+
+  // Checks if all goals are reachable
+  getGoalReachability() {
+    const daysRemaining = DateUtils.daysRemainingInYear();
+
+    // Helper function to check if a goal is reachable
+    const isGoalReachable = (current, goal, averageDailyProgress) => {
+      if (goal === undefined) return undefined; // No goal set
+
+      const requiredProgressPerDay = (goal - current) / daysRemaining;
+      // log all data to test the function
+      console.log('current', current);
+      console.log('goal', goal);
+      console.log('averageDailyProgress', averageDailyProgress);
+      console.log('requiredProgressPerDay', requiredProgressPerDay);
+      console.log('daysRemaining', daysRemaining);
+      console.log('goal reachable', requiredProgressPerDay <= averageDailyProgress);
+
+
+      return requiredProgressPerDay <= averageDailyProgress;
+    };
+
+    // Return reachability status for each goal
+    return {
+      distance: isGoalReachable(this.distance, this.goals.distance, this.averageDailyDistance),
+      count: isGoalReachable(this.count, this.goals.count, this.averageDailyCount),
+      elevation_gain: isGoalReachable(this.elevation_gain, this.goals.elevation_gain, this.averageDailyElevationGain)
+    };
   }
 }

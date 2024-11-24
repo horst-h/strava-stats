@@ -135,8 +135,12 @@ function displayData(data) {
     document.getElementById('target_reachable').innerText = data.ytd_run_totals.goalsReachable
       ? 'Yes'
       : 'No';
+
+      const goalStatus = data.ytd_run_totals.getGoalReachability();
+      console.log(goalStatus);
+
     // get distance for each target
-    // document.getElementById('target_differnce').innerText = `${data.targetDifference.toFixed(2)} km`;
+    document.getElementById('target_differnce').innerText = `${data.ytd_run_totals.getDistanceToGoal("distance")} km`;
     document.getElementById('weeksToTarget').innerText = `${data.ytd_run_totals.predictedWeeksToGoDistance}`;
     document.getElementById('targetDate').innerText = `${data.ytd_run_totals.predictedDateDistance.toDateString()}`;
     document.getElementById(
