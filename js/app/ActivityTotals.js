@@ -1,6 +1,6 @@
 // ActivityTotals.js
 import ActivityGoals from './ActivityGoals.js';
-import DateUtils from './DateUtils.js';
+import DateUtils from '../utils/DateUtils.js';
 
 export default class ActivityTotals {
   constructor(
@@ -9,7 +9,7 @@ export default class ActivityTotals {
     goals = {}
   ) {
     this.count = count;
-    this.distance = distance;
+    this.distance = distance / 1000; // Convert to km
     this.moving_time = moving_time;
     this.elapsed_time = elapsed_time;
     this.elevation_gain = elevation_gain;
@@ -22,7 +22,7 @@ export default class ActivityTotals {
   }
 
   get distanceInKm() {
-    return parseFloat((this.distance / 1000).toFixed(2));
+    return parseFloat((this.distance).toFixed(2));
   } 
 
   // get the avarge distance per unit in km
@@ -60,7 +60,7 @@ export default class ActivityTotals {
 
   // check if the goals are reached if no goal is set return undefined
   get distanceGoalReached() {
-    return this.goals.distance !== undefined ? this.distance/1000 >= this.goals.distance : undefined;
+    return this.goals.distance !== undefined ? this.distance >= this.goals.distance : undefined;
   }
 
   get countGoalReached() {
@@ -99,7 +99,7 @@ export default class ActivityTotals {
   }
 
   get predictedYearEndDistanceKm() {
-    return parseFloat(this.predictedYearEndDistance / 1000).toFixed(2);
+    return parseFloat(this.predictedYearEndDistance).toFixed(2);
   }
 
   get predictedYearEndCount() {
@@ -150,26 +150,18 @@ export default class ActivityTotals {
 
     // Helper function to check if a goal is reachable
     const isGoalReachable = (current, goal, averageDailyProgress) => {
-      if (goal === undefined) return undefined; // No goal set
-
+      if (goal === undefined || goal === 0) return undefined; // Treat 0 as "no goal"
       const requiredProgressPerDay = (goal - current) / daysRemaining;
-      // log all data to test the function
-      console.log('current', current);
-      console.log('goal', goal);
-      console.log('averageDailyProgress', averageDailyProgress);
-      console.log('requiredProgressPerDay', requiredProgressPerDay);
-      console.log('daysRemaining', daysRemaining);
-      console.log('goal reachable', requiredProgressPerDay <= averageDailyProgress);
-
-
       return requiredProgressPerDay <= averageDailyProgress;
     };
 
-    // Return reachability status for each goal
-    return {
+    const result = {
       distance: isGoalReachable(this.distance, this.goals.distance, this.averageDailyDistance),
       count: isGoalReachable(this.count, this.goals.count, this.averageDailyCount),
       elevation_gain: isGoalReachable(this.elevation_gain, this.goals.elevation_gain, this.averageDailyElevationGain)
     };
+
+    // Return reachability status for each goal
+    return result;
   }
 }

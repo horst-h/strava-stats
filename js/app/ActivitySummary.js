@@ -32,5 +32,3 @@ export default class ActivitySummary {
     this.createdAt = new Date(); // add current date and time
   }
 }
-
-

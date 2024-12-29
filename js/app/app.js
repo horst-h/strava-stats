@@ -1,7 +1,15 @@
-// impoort activity classes fromo file ActivitySummary.js
-import ActivitySummary from './ActivitySummary.js';
-import DateUtils from './DateUtils.js';
-
+import { createActivitySummary, displayData } from './dataProcessing.js';
+import {saveDataToFile} from '../utils/storage.js';
+import { oauthConfig } from '../oauth/config.js';
+import {
+  loadClientId,
+  loadClientSecret,
+  loadRefreshToken,
+  saveOAuthConfig,
+  isAccessTokenExpired,
+  loadAccessToken,
+  refreshAccessToken
+} from '../oauth/oauth.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Check if configuration and tokens are stored
@@ -30,6 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('get-protected-data').style.display = 'block';
   });
 
+  // add event listener to the button with id "save-data-to-file"
+  document.getElementById('save-data-to-file').addEventListener('click', () => {
+    saveDataToFile(processedData);
+  });
+
   // Event Listener for the "Get Protected Data" button
   document
     .getElementById('get-protected-data')
@@ -45,8 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
       await fetchProtectedData(accessToken);
     });
 });
+let processedData;
 
 async function fetchProtectedData(accessToken) {
+  const buttonContainer = document.getElementById('buttonContainer');
+  const saveButton = document.getElementById('save-data-to-file');
+
   if (accessToken) {
     try {
       // Replace with your protected endpoint
@@ -74,8 +91,15 @@ async function fetchProtectedData(accessToken) {
       console.log('Received Data:', data);
 
       // process and display the data
-      // processData(data).then((object) => {displayData(object)});
-      createActivitySummary(data).then((object) => {displayData(object)});
+      createActivitySummary(data).then((object) => {
+        processedData = object;
+        displayData(object);
+      });
+
+      // enable the save button by resetting the display style
+      saveButton.style.display = 'block';
+      // set click action to save the data to a file
+      saveButton.onclick = () => saveDataToFile(processedData);
     } catch (error) {
       console.error('Error fetching protected data:', error);
       document.getElementById('api-response').innerText =
@@ -86,71 +110,3 @@ async function fetchProtectedData(accessToken) {
       'No valid access token available. Please log in again.';
   }
 }
-
-async function createActivitySummary(activityData) {
-  const activitySummary = new ActivitySummary(activityData);
-  activitySummary.ytd_run_totals.setGoals({ distance: 1000, count: 100 });
-  console.log(activitySummary);
-  return activitySummary;
-}
-
-// display the data in the HTML-page
-function displayData(data) {
-    // clear previous data
-    document.getElementById('api-response').innerHTML = '';
-  
-    // create a new div element
-    const div = document.createElement('div');
-  
-    // add class to the div
-    div.classList.add('data-container');
-  
-    // create a heading element
-    const heading = document.createElement('h2');
-    heading.innerText = 'Athlete Stats';
-    // display date and time below
-    const date = new Date();
-    const dateString = date.toDateString();
-    const timeString = date.toLocaleTimeString();
-    const dateTime = document.createElement('p');
-    dateTime.innerText = `Data retrieved on ${dateString} at ${timeString}`;
-    // append date and time to the div
-    div.appendChild(dateTime);
-  
-    // append heading to the div
-    div.appendChild(heading);
-  
-    // Display the distance in the HTML div with id "run_ytd_run_totals"
-    document.getElementById(
-      'run_ytd_run_totals'
-    ).innerText = `${data.ytd_run_totals.distanceInKm} km`;
-    document.getElementById('run_ytd_run_count').innerText = `${data.ytd_run_totals.count}`;
-    document.getElementById('weeks_left').innerText = `${DateUtils.weeksToGo()}`;
-    document.getElementById('avg_dist_per_week').innerText = `${data.ytd_run_totals.avgDistancePerWeekKm} km`;
-    document.getElementById('avg_runs_per_week').innerText = `${data.ytd_run_totals.avgUnitsPerWeek}`;
-    document.getElementById(
-      'avg_dist_per_run'
-    ).innerText = `${data.ytd_run_totals.avgDistanceUnitKm} km`;;
-    // TODO: crrect this and adapt to specific goal
-    document.getElementById('target_reachable').innerText = data.ytd_run_totals.goalsReachable
-      ? 'Yes'
-      : 'No';
-
-      const goalStatus = data.ytd_run_totals.getGoalReachability();
-      console.log(goalStatus);
-
-    // get distance for each target
-    document.getElementById('target_differnce').innerText = `${data.ytd_run_totals.getDistanceToGoal("distance")} km`;
-    document.getElementById('weeksToTarget').innerText = `${data.ytd_run_totals.predictedWeeksToGoDistance}`;
-    document.getElementById('targetDate').innerText = `${data.ytd_run_totals.predictedDateDistance.toDateString()}`;
-    document.getElementById(
-      'forecast_distance'
-    ).innerText = `${data.ytd_run_totals.predictedYearEndDistanceKm} km`;
-    document.getElementById('floor_avg_runs_per_week').innerText = `${data.ytd_run_totals.avgUnitsPerWeek} `;
-    document.getElementById('floor_avg_dist_per_run').innerText = `${data.ytd_run_totals.avgDistanceUnitKm} km`;
-    document.getElementById('runs_till_eoy').innerText = `${data.ytd_run_totals.predictedYearEndCount} `;
-  
-    // append the div to the api-response element
-    document.getElementById('api-response').appendChild(div);
-  }
-  
