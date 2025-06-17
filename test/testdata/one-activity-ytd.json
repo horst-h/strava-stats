@@ -1,0 +1,122 @@
+{
+  "biggest_ride_distance": 89272.1,
+  "biggest_climb_elevation_gain": 922.3000000000001,
+  "recent_ride_totals": {
+    "count": 0,
+    "distance": 0,
+    "moving_time": 0,
+    "elapsed_time": 0,
+    "elevation_gain": 0,
+    "goals": {
+      "distance": 0,
+      "count": 0,
+      "elevation_gain": 0,
+      "time": 0
+    }
+  },
+  "all_ride_totals": {
+    "count": 32,
+    "distance": 1392.1213212890625,
+    "moving_time": 261481,
+    "elapsed_time": 385432,
+    "elevation_gain": 15266.298413276672,
+    "goals": {
+      "distance": 0,
+      "count": 0,
+      "elevation_gain": 0,
+      "time": 0
+    }
+  },
+  "recent_run_totals": {
+    "count": 8,
+    "distance": 81.063400390625,
+    "moving_time": 28206,
+    "elapsed_time": 28415,
+    "elevation_gain": 500,
+    "goals": {
+      "distance": 0,
+      "count": 0,
+      "elevation_gain": 0,
+      "time": 0
+    }
+  },
+  "all_run_totals": {
+    "count": 284,
+    "distance": 2859.194501220703,
+    "moving_time": 980813,
+    "elapsed_time": 1000455,
+    "elevation_gain": 23286.956310749054,
+    "goals": {
+      "distance": 0,
+      "count": 0,
+      "elevation_gain": 0,
+      "time": 0
+    }
+  },
+  "recent_swim_totals": {
+    "count": 0,
+    "distance": 0,
+    "moving_time": 0,
+    "elapsed_time": 0,
+    "elevation_gain": 0,
+    "goals": {
+      "distance": 0,
+      "count": 0,
+      "elevation_gain": 0,
+      "time": 0
+    }
+  },
+  "all_swim_totals": {
+    "count": 0,
+    "distance": 0,
+    "moving_time": 0,
+    "elapsed_time": 0,
+    "elevation_gain": 0,
+    "goals": {
+      "distance": 0,
+      "count": 0,
+      "elevation_gain": 0,
+      "time": 0
+    }
+  },
+  "ytd_ride_totals": {
+    "count": 0,
+    "distance": 0,
+    "moving_time": 0,
+    "elapsed_time": 0,
+    "elevation_gain": 0,
+    "goals": {
+      "distance": 0,
+      "count": 0,
+      "elevation_gain": 0,
+      "time": 0
+    }
+  },
+  "ytd_run_totals": {
+    "count": 1,
+    "distance": 10.056,
+    "moving_time": 3411,
+    "elapsed_time": 3414,
+    "elevation_gain": 55,
+    "goals": {
+      "distance": 1000,
+      "count": 100,
+      "elevation_gain": 0,
+      "time": 0
+    }
+  },
+  "ytd_swim_totals": {
+    "count": 0,
+    "distance": 0,
+    "moving_time": 0,
+    "elapsed_time": 0,
+    "elevation_gain": 0,
+    "goals": {
+      "distance": 0,
+      "count": 0,
+      "elevation_gain": 0,
+      "time": 0
+    }
+  },
+  "createdAt": "2025-01-06T16:05:32.985Z"
+}

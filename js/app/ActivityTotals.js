@@ -27,7 +27,8 @@ export default class ActivityTotals {
 
   // get the avarge distance per unit in km
   get avgDistanceUnitKm() {
-    return parseFloat((this.distanceInKm / this.count).toFixed(2));
+    const returnValue = parseFloat((this.distanceInKm / this.count).toFixed(2));
+    return isNaN(returnValue) ? 0 : returnValue;
   }
 
   get avgDistanceUnit() {
@@ -36,11 +37,15 @@ export default class ActivityTotals {
 
   // get the distance per week in km
   get avgDistancePerWeekKm() {
-    return parseFloat((this.distanceInKm / DateUtils.weeksPassed(this.createdAt)).toFixed(2));
+    // calculate the average distance per week
+    const avgDistPerWeek = parseFloat((this.distanceInKm / DateUtils.weeksPassed(this.createdAt)).toFixed(2));
+    // check if result is a number
+    return isNaN(avgDistPerWeek) ? 0 : avgDistPerWeek;
   }
   // get the avarage number of units per week
   get avgUnitsPerWeek() {
-    return parseFloat((this.count / DateUtils.weeksPassed(this.createdAt)).toFixed(2));
+    const returnValue = parseFloat((this.count / DateUtils.weeksPassed(this.createdAt)).toFixed(2));
+    return isNaN(returnValue) ? 0 : returnValue;
   }
 
   // get the avarage distance per day

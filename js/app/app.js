@@ -1,5 +1,5 @@
 import { createActivitySummary, displayData } from './dataProcessing.js';
-import {saveDataToFile} from '../utils/storage.js';
+import { saveDataToFile } from '../utils/storage.js';
 import { oauthConfig } from '../oauth/config.js';
 import {
   loadClientId,
@@ -10,6 +10,7 @@ import {
   loadAccessToken,
   refreshAccessToken
 } from '../oauth/oauth.js';
+import { setupEventListeners } from './eventHandlers.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Check if configuration and tokens are stored
@@ -25,42 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('get-protected-data').style.display = 'block';
   }
 
-  document.getElementById('config-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const clientId = document.getElementById('clientId').value;
-    const clientSecret = document.getElementById('clientSecret').value;
-    const refreshToken = document.getElementById('refreshToken').value;
-
-    saveOAuthConfig(clientId, clientSecret, refreshToken);
-
-    document.getElementById('config-form-container').style.display = 'none';
-    document.getElementById('get-protected-data').style.display = 'block';
-  });
-
-  // add event listener to the button with id "save-data-to-file"
-  document.getElementById('save-data-to-file').addEventListener('click', () => {
-    saveDataToFile(processedData);
-  });
-
-  // Event Listener for the "Get Protected Data" button
-  document
-    .getElementById('get-protected-data')
-    .addEventListener('click', async () => {
-      let accessToken = loadAccessToken();
-
-      if (!accessToken || isAccessTokenExpired()) {
-        accessToken = await refreshAccessToken();
-      }
-
-      console.log('Access Token:', accessToken);
-
-      await fetchProtectedData(accessToken);
-    });
+  setupEventListeners();
 });
-let processedData;
+export let processedData;
 
-async function fetchProtectedData(accessToken) {
+// create a function to check for valid access token and renew id necessary
+export async function checkAccessToken() {
+  let accessToken = loadAccessToken();
+  if (!accessToken || isAccessTokenExpired()) {
+      accessToken = await refreshAccessToken();
+  }
+  
+  return accessToken;
+}
+
+export async function fetchProtectedData(accessToken) {
   const buttonContainer = document.getElementById('buttonContainer');
   const saveButton = document.getElementById('save-data-to-file');
 
@@ -98,8 +78,6 @@ async function fetchProtectedData(accessToken) {
 
       // enable the save button by resetting the display style
       saveButton.style.display = 'block';
-      // set click action to save the data to a file
-      saveButton.onclick = () => saveDataToFile(processedData);
     } catch (error) {
       console.error('Error fetching protected data:', error);
       document.getElementById('api-response').innerText =
